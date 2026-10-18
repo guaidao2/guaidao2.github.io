@@ -1,0 +1,48 @@
+---
+layout: default
+---
+{% assign t = page %}
+<article class="tool">
+  <header class="tool-head">
+    <p class="mono label">TOOL</p>
+    <h1>{{ t.title }}</h1>
+    <p class="tool-tagline">{{ t.tagline }}</p>
+    <div class="chips">
+      {% if t.version %}<span class="chip mono">v{{ t.version }}</span>{% endif %}
+      {% for p in t.platforms %}<span class="chip mono">{{ p }}</span>{% endfor %}
+      {% if t.license %}<span class="chip mono">{{ t.license }}</span>{% endif %}
+      {% if t.status %}<span class="chip mono ok">{{ t.status }}</span>{% endif %}
+    </div>
+    <div class="tool-acts">
+      {% if t.release_url %}<a class="btn" href="{{ t.release_url }}">下载最新版</a>{% endif %}
+      {% if t.repo_url %}<a class="btn ghost" href="{{ t.repo_url }}">源码</a>{% endif %}
+      {% if t.docs_url %}<a class="btn ghost" href="{{ t.docs_url }}">文档</a>{% endif %}
+    </div>
+  </header>
+
+  <div class="prose tool-body">
+    {{ content }}
+  </div>
+
+  {% if t.checksums %}
+  <section class="tool-block">
+    <h2>版本与校验</h2>
+    <table class="sums">
+      <thead><tr><th>平台</th><th>文件</th><th>SHA256</th></tr></thead>
+      <tbody>
+        {% for c in t.checksums %}
+        <tr>
+          <td class="mono">{{ c.platform }}</td>
+          <td class="mono">{{ c.file }}</td>
+          <td class="mono sum">{{ c.sha256 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="mono dim note">下载后先比对哈希再执行。</p>
+  </section>
+  {% endif %}
+
+  <footer class="post-foot">
+    <a class="mono" href="{{ '/' | relative_url }}#tools">← 全部工具</a>  </footer>
+</article>

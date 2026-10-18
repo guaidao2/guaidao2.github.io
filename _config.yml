@@ -1,0 +1,31 @@
+title: guaidao2 × coolmoon
+description: 进攻性安全研究 · 工具与写记
+author: guaidao2 & coolmoon
+url: "https://guaidao2.github.io"
+baseurl: ""
+github_username: guaidao2
+
+markdown: kramdown
+highlighter: rouge
+permalink: /blog/:title/
+timezone: Asia/Shanghai
+
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    css_class: highlight
+
+exclude:
+  - templates
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+  - scope:
+      path: "tools"
+    values:
+      permalink: /tools/:basename/

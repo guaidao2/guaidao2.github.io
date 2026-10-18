@@ -1,0 +1,21 @@
+---
+layout: default
+title: 文章
+---
+<section class="page-head">
+  <h1>文章</h1>
+  <p class="dim">工具背后的判据、靶场复盘、踩过的坑。</p>
+</section>
+
+<section class="post-list">
+  {% for post in site.posts %}
+  <a class="post-item" href="{{ post.url | relative_url }}">
+    <span class="mono dim">{{ post.date | date: "%Y-%m-%d" }}</span>
+    <span class="post-item-title">{{ post.title }}</span>
+    {% if post.summary %}<span class="dim post-item-summary">{{ post.summary }}</span>{% endif %}
+  </a>
+  {% endfor %}
+  {% if site.posts.size == 0 %}
+  <p class="dim">还没有文章。</p>
+  {% endif %}
+</section>

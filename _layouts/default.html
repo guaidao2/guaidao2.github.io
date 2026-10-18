@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} · {{ site.description }}{% endif %}</title>
+  <meta name="description" content="{% if page.summary %}{{ page.summary }}{% else %}{{ site.description }}{% endif %}">
+  <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}">
+  <meta property="og:type" content="{% if page.layout == 'post' %}article{% else %}website{% endif %}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  {% if page.image %}<meta property="og:image" content="{{ page.image | absolute_url }}">{% endif %}
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/tools.css' | relative_url }}">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='monospace'>%3E</text></svg>">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <img src="{{ '/assets/img/guaidao2.webp' | relative_url }}" alt="">
+      guaidao2
+    </a>
+    <nav>
+      <a href="{{ '/' | relative_url }}#tools">工具</a>
+      <a href="{{ '/blog/' | relative_url }}">文章</a>
+      <a href="{{ '/' | relative_url }}#about">关于</a>
+      <a href="https://github.com/{{ site.github_username }}" rel="me">GitHub</a>
+    </nav>
+  </header>
+
+  <main>
+    {{ content }}
+  </main>
+
+  <footer class="footer">
+    <span class="mono">guaidao2 &amp; coolmoon</span>
+    <span>进攻性安全研究</span>
+    <span class="mono">{{ site.time | date: "%Y" }}</span>
+  </footer>
+
+  <script>
+  // 点击图片放大（无依赖，替代 medium-zoom）
+  (function () {
+    var veil = null;
+    document.addEventListener('click', function (e) {
+      var t = e.target;
+      if (t.tagName === 'IMG' && !t.closest('.no-zoom')) {
+        if (veil) { veil.remove(); veil = null; return; }
+        veil = document.createElement('div');
+        veil.className = 'zoom-veil';
+        var big = t.cloneNode();
+        big.className = 'zoom-img';
+        veil.appendChild(big);
+        document.body.appendChild(veil);
+      } else if (veil) {
+        veil.remove(); veil = null;
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

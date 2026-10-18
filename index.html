@@ -1,0 +1,144 @@
+---
+layout: default
+---
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <span class="glow g1"></span>
+    <span class="glow g2"></span>
+    <span class="grid"></span>
+  </div>
+
+  <div class="hero-inner">
+    <p class="kicker mono">// セキュリティリサーチ · offensive security</p>
+
+    <div class="hero-grid">
+      <div class="avatars">
+        <figure class="ava a1">
+          <img src="{{ '/assets/img/guaidao2.webp' | relative_url }}" alt="guaidao2">
+          <figcaption class="mono">guaidao2</figcaption>
+        </figure>
+        <span class="cross mono">×</span>
+        <figure class="ava a2">
+          <img src="{{ '/assets/img/coolmoon.webp' | relative_url }}" alt="coolmoon">
+          <figcaption class="mono">coolmoon</figcaption>
+        </figure>
+      </div>
+
+      <div class="hero-copy">
+        <h1>
+          <span class="glitch" data-text="guaidao2">guaidao2</span>
+          <span class="amp">×</span>
+          <span class="name2">coolmoon</span>
+        </h1>
+        <p class="lead">进攻性安全研究。写工具，也写工具为什么能打穿。</p>
+        <div class="hero-links">
+          <a class="btn" href="#tools">工具</a>
+          <a class="btn ghost" href="{{ '/blog/' | relative_url }}">文章</a>
+          <a class="btn ghost" href="https://github.com/{{ site.github_username }}">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="term mono">
+      <div class="term-bar"><span></span><span></span><span></span><em>crackweb — scan</em></div>
+      <pre><span class="p">$</span> crackweb scan -u <span class="s">"https://target.example/app?q=1"</span> -k --forms
+<span class="h">[Critical]</span> command injection      <span class="d">body:plot</span>
+<span class="h">[High]</span>     path traversal         <span class="d">query:q</span>
+<span class="d">scan finished: 16 finding(s) from 2112 request(s)</span></pre>
+    </div>
+  </div>
+</section>
+
+<section id="tools" class="section">
+  <h2><span class="mono hash">#</span>工具</h2>
+
+  <div class="flag-card">
+    <div class="flag-main">
+      <p class="kicker mono">// flagship</p>
+      <h2>crackweb</h2>
+      <p class="flag-sub">流量驱动的 Web DAST。把浏览器挂到代理上正常访问，它对经过的每一条流量做测试。</p>
+      <div class="chips">
+        <span class="chip mono">Windows · Linux</span>
+        <span class="chip mono">DAST</span>
+      </div>
+      <p class="credit mono dim">guaidao2 &amp; coolmoon · 变异引擎与核心算法：coolmoon</p>
+      <div class="flag-acts">
+        <a class="btn" href="{{ '/tools/crackweb/' | relative_url }}">工具页</a>
+        <a class="btn ghost" href="https://github.com/{{ site.github_username }}">Releases</a>
+      </div>
+    </div>
+    <ul class="flag-feats">
+      <li>
+        <b>读侧注入</b>
+        <span>SQL 注入（含宽字节）、XSS、路径穿越与文件包含、命令注入、SSRF、XXE。</span>
+      </li>
+      <li>
+        <b>协议与凭据</b>
+        <span>JWT 解析与离线还原签名密钥；base64 内嵌 JSON 的识别与测试。</span>
+      </li>
+      <li>
+        <b>被动面</b>
+        <span>安全响应头、Cookie 属性、版本泄露、第三方资源完整性、组件 CVE。</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="mini-cards">
+    <a class="mini-card" href="{{ '/tools/cryptoexp/' | relative_url }}">
+      <div class="mini-top">
+        <h3>cryptoexp</h3>
+        <span class="mono tag">guaidao2 × coolmoon</span>
+      </div>
+      <p>密码学工具库：零依赖原语加一层分析管线，26k 行纯 Python。原名 cryptokit，整合由 guaidao2 主导，实现全部由 coolmoon 完成。</p>
+      <p class="card-meta mono dim">Cryptography <span class="arrow">→</span></p>
+    </a>
+    <a class="mini-card" href="{{ '/tools/vuln4all/' | relative_url }}">
+      <div class="mini-top">
+        <h3>vuln4all</h3>
+        <span class="mono tag">guaidao2</span>
+      </div>
+      <p>模块化 Web 漏洞靶场：22 个类别、46 道题，放一个 <code>module.py</code> 进去就多一道题。每题自带重置、提示与答案。</p>
+      <p class="card-meta mono dim">Lab <span class="arrow">→</span></p>
+    </a>
+  </div>
+</section>
+
+<section class="section">
+  <h2><span class="mono hash">#</span>最近</h2>
+  <div class="post-list">
+    {% for post in site.posts limit: 5 %}
+    <a class="post-item" href="{{ post.url | relative_url }}">
+      <span class="mono dim">{{ post.date | date: "%Y-%m-%d" }}</span>
+      <span class="post-item-title">{{ post.title }}</span>
+      {% if post.summary %}<span class="dim post-item-summary">{{ post.summary }}</span>{% endif %}
+    </a>
+    {% else %}
+    <p class="dim">还没有文章。</p>
+    {% endfor %}
+  </div>
+  {% if site.posts.size > 0 %}
+  <p class="more"><a class="mono" href="{{ '/blog/' | relative_url }}">全部文章 →</a></p>
+  {% endif %}
+</section>
+
+<section id="about" class="section">
+  <h2><span class="mono hash">#</span>关于</h2>
+  <div class="authors">
+    <div class="author">
+      <img class="author-img" src="{{ '/assets/img/guaidao2.webp' | relative_url }}" alt="guaidao2">
+      <div>
+        <p class="author-name mono">guaidao2</p>
+        <p class="author-bio">进攻性安全研究、工具开发与工程实现；cryptoexp 的整合由我做。判断给依据，结论指到具体的观测。</p>
+        <p class="mono dim"><a href="https://github.com/guaidao2">github.com/guaidao2</a></p>
+      </div>
+    </div>
+    <div class="author">
+      <img class="author-img" src="{{ '/assets/img/coolmoon.webp' | relative_url }}" alt="coolmoon">
+      <div>
+        <p class="author-name mono">coolmoon</p>
+        <p class="author-bio">我的师姐，也是我生活里的那个人。核心算法作者：crackweb 的变异引擎、多个工具的核心算法由她主导；cryptoexp（原名 cryptokit）的整合我做，代码全是她写的。</p>
+        <p class="mono dim">二次元 · 算法与逆向</p>
+      </div>
+    </div>
+  </div>
+</section>

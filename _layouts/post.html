@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<article class="post">
+  <header class="post-head">
+    <div class="mono dim">
+      <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%Y-%m-%d" }}</time>
+      {% if page.tags.size > 0 %} · {{ page.tags | join: " · " }}{% endif %}
+    </div>
+    <h1>{{ page.title }}</h1>
+    {% if page.summary %}<p class="post-summary">{{ page.summary }}</p>{% endif %}
+  </header>
+
+  <div class="prose">
+    {{ content }}
+  </div>
+
+  <footer class="post-foot">
+    <a class="mono" href="{{ '/blog/' | relative_url }}">← 全部文章</a>
+  </footer>
+</article>
