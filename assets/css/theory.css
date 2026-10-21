@@ -1,0 +1,228 @@
+/* 理论页专用样式 —— 复用 style.css 的变量与暗色基调 */
+
+html { overflow-x: hidden; }
+
+.th-hero {
+  position: relative;
+  padding: 64px 0 34px;
+  border-bottom: 1px solid var(--line);
+}
+.th-hero::before {
+  content: "";
+  position: absolute;
+  inset: -120px -80px 0 -80px;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(95, 243, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 124, 255, 0.05) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: radial-gradient(ellipse 62% 70% at 30% 20%, #000 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 62% 70% at 30% 20%, #000 0%, transparent 78%);
+}
+.th-hero > * { position: relative; }
+
+.th-title {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: clamp(1.9rem, 4.6vw, 3rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.16;
+  color: #fff;
+  text-shadow: 0 0 30px rgba(95, 243, 255, 0.26);
+}
+.th-title .accent { color: var(--cyan); }
+.th-sub {
+  margin: 14px 0 0;
+  max-width: 40em;
+  color: var(--dim);
+  font-size: 1.02rem;
+}
+.th-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin-top: 22px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--dim);
+}
+.th-meta b { color: var(--text); font-weight: 600; }
+
+/* 目录 */
+.th-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 26px 0 0;
+}
+.th-toc a {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--dim);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 12px;
+  transition: 0.18s ease;
+}
+.th-toc a:hover {
+  color: var(--cyan);
+  border-color: rgba(95, 243, 255, 0.5);
+  background: var(--cyan-soft);
+}
+
+/* 正文 */
+.th-prose { max-width: 76ch; padding: 18px 0 0; }
+.th-prose h2 {
+  margin: 2.1em 0 0.7em;
+  padding-bottom: 0.35em;
+  font-size: 1.22rem;
+  border-bottom: 1px solid var(--line);
+}
+.th-prose h2 .no {
+  font-family: var(--mono);
+  color: var(--cyan);
+  font-size: 0.82em;
+  margin-right: 10px;
+}
+.th-prose h3 { margin: 1.7em 0 0.6em; font-size: 1.02rem; }
+.th-prose p { margin: 0 0 1.1em; color: #c9d6ea; }
+.th-prose strong { color: #fff; }
+.th-prose a { color: var(--cyan); border-bottom: 1px solid rgba(95, 243, 255, 0.3); }
+.th-prose a:hover { border-bottom-color: var(--cyan); }
+.th-prose code {
+  padding: 0.12em 0.36em;
+  background: #0f1728;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.86em;
+  color: #cfe0ff;
+}
+.th-prose blockquote {
+  margin: 0 0 1.2em;
+  padding: 12px 16px;
+  border-left: 2px solid var(--violet);
+  background: rgba(139, 124, 255, 0.05);
+  color: var(--dim);
+}
+.th-prose blockquote p:last-child { margin-bottom: 0; }
+
+/* 图 */
+.th-fig { margin: 1.8em 0 2em; }
+.th-fig svg { display: block; width: 100%; height: auto; overflow: visible; }
+.th-fig figcaption {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--dim);
+  line-height: 1.7;
+}
+.th-fig figcaption b { color: var(--cyan); font-family: var(--mono); font-weight: 600; margin-right: 6px; }
+
+/* 四类事实 */
+.th-basis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 1.4em 0 1.8em;
+}
+.th-basis > div {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(15, 23, 40, 0.92), rgba(11, 18, 32, 0.92));
+}
+.th-basis dt {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  margin-bottom: 4px;
+}
+.th-basis dt.n { color: var(--pink); }
+.th-basis dd { margin: 0; font-size: 0.9rem; color: var(--dim); line-height: 1.65; }
+@media (max-width: 620px) {
+  .th-basis { grid-template-columns: 1fr; }
+  .th-hero::before { inset: -60px 0 0 0; }
+}
+
+/* 卡片组 */
+.th-cards { display: grid; gap: 12px; margin: 1.4em 0 1.8em; }
+.th-card {
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-left: 2px solid rgba(95, 243, 255, 0.5);
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(15, 23, 40, 0.72), rgba(11, 18, 32, 0.72));
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.th-card:hover {
+  border-color: var(--line-hi);
+  border-left-color: var(--cyan);
+  box-shadow: 0 0 0 1px rgba(95, 243, 255, 0.06), 0 16px 36px rgba(0, 0, 0, 0.4);
+}
+.th-card h4 {
+  margin: 0 0 6px;
+  font-size: 0.99rem;
+  color: #fff;
+}
+.th-card p { margin: 0; font-size: 0.92rem; color: var(--dim); line-height: 1.72; }
+.th-card p + p { margin-top: 8px; }
+
+/* 边界列表 */
+.th-limits { counter-reset: lim; margin: 1.4em 0 1.8em; }
+.th-limits > div {
+  position: relative;
+  padding: 14px 0 14px 44px;
+  border-bottom: 1px dashed var(--line);
+}
+.th-limits > div:first-child { border-top: 1px dashed var(--line); }
+.th-limits > div::before {
+  counter-increment: lim;
+  content: counter(lim, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 15px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--violet);
+}
+.th-limits p { margin: 0; font-size: 0.94rem; color: var(--dim); }
+
+/* 系列导航 */
+.th-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 42px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.th-nav a, .th-nav span {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--dim);
+}
+.th-nav a:hover { color: var(--cyan); }
+
+/* 理论列表 */
+.th-list { border-top: 1px solid var(--line); margin-top: 26px; }
+.th-item {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 6px 20px;
+  padding: 18px 4px;
+  border-bottom: 1px solid var(--line);
+  transition: padding-left 0.16s ease, background 0.16s ease;
+}
+.th-item:hover { padding-left: 10px; background: rgba(139, 124, 255, 0.04); }
+.th-item .no { font-family: var(--mono); font-size: 13px; color: var(--cyan); }
+.th-item h3 { margin: 0; font-size: 1.02rem; font-weight: 500; color: var(--text); }
+.th-item:hover h3 { color: #fff; text-shadow: 0 0 16px rgba(95, 243, 255, 0.35); }
+.th-item p { grid-column: 2; margin: 0; font-size: 0.9rem; color: var(--dim); }
+.th-item.soon { opacity: 0.55; }
+@media (max-width: 620px) {
+  .th-item { grid-template-columns: 1fr; }
+  .th-item p { grid-column: 1; }
+}

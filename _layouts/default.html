@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
@@ -11,6 +11,7 @@
   {% if page.image %}<meta property="og:image" content="{{ page.image | absolute_url }}">{% endif %}
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
   <link rel="stylesheet" href="{{ '/assets/css/tools.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/theory.css' | relative_url }}">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' font-family='monospace'>%3E</text></svg>">
 </head>
 <body>
@@ -22,6 +23,7 @@
     <nav>
       <a href="{{ '/' | relative_url }}#tools">工具</a>
       <a href="{{ '/blog/' | relative_url }}">文章</a>
+      <a href="{{ '/theory/' | relative_url }}">理论</a>
       <a href="{{ '/' | relative_url }}#about">关于</a>
       <a href="https://github.com/{{ site.github_username }}" rel="me">GitHub</a>
     </nav>

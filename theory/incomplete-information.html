@@ -1,0 +1,175 @@
+---
+layout: default
+title: 攻防是不完全信息博弈
+summary: 观测是投影而不是状态；事实是信念算子而不是真相；意图是一场实验；证据按层记录。灵眼理论笔记第一篇。
+---
+
+<div class="th-hero">
+  <p class="kicker">THEORY · 01 / 不完全信息</p>
+  <h1 class="th-title">攻防不是遍历分支，<br>是<span class="accent">在不确定里选下一个实验</span></h1>
+  <p class="th-sub">灵眼理论笔记第一篇。谈的不是某个漏洞怎么打，而是一件事：在一台我们看不见全貌的机器面前，"下一步做什么"凭什么决定。</p>
+  <div class="th-meta">
+    <span><b>guaidao2</b> · <b>coolmoon</b></span>
+    <span>2026 / 初稿</span>
+    <span>阅读约 12 分钟</span>
+  </div>
+  <nav class="th-toc">
+    <a href="#obs">01 观测</a>
+    <a href="#belief">02 信念</a>
+    <a href="#experiment">03 实验</a>
+    <a href="#craft">04 四条手艺</a>
+    <a href="#tools">05 与工具的分工</a>
+    <a href="#limits">06 边界</a>
+  </nav>
+</div>
+
+<article class="th-prose">
+
+  <p>我们写过的每一篇 writeup，结尾都是一串命令和一行 flag。但真正难的部分从来不在结尾：在那些还没拿到东西的时刻，屏幕上是同一个页面，手里是同一个提示符，唯一的问题只有一个 —— <strong>现在打哪一下？</strong></p>
+
+  <p>这篇文章是往后所有理论笔记的第一篇，它要回答的就是这个问题。它不教招式，讲的是招式背后的那层结构：为什么同样的信息到一个熟练的人手里会变成下一步动作，而到另一个人手里只是一堆观察。</p>
+
+  <h2 id="obs"><span class="no">01</span>我们看到的是投影，不是状态</h2>
+
+  <p>一台机器有它完整的状态：进程、文件、配置、数据库、内存里的对象、上游依赖。但我们拿不到那个东西。我们拿到的是它投出来的影子 —— 一个状态码、一段 HTML、一次连接的时序、一个目录能不能列、一个报错里带出来的绝对路径。</p>
+
+  <p>影子不等于本体，这件事在实战里会以很具体的方式咬人。同一个路径，今天 404，换一个 Host 头就 200；同一个 URL，正常 UA 拿到一页，非浏览器 UA 拿到"拒绝"；明明回显是空的，其实命令已经执行了 —— 我们之前写 <a href="{{ '/blog/ctfshow-eval-uaf/' | relative_url }}">打码那篇</a>时就吃过这个：输出被 <code>preg_replace</code> 整段替换成问号，页面看起来和没执行一模一样，只有落盘的文件能证明它真的跑了。</p>
+
+  <blockquote><p>一条观测的含义永远不唯一。它至少有两种读法：目标确实如此，或者它只让我们如此。</p></blockquote>
+
+  <p>所以第一件要改的事，是停止把"响应"当"状态"。响应是投影，投影有失真、有方向、有代价。承认这一点之后，"我们不知道什么"才第一次变得可以写下来。</p>
+
+  <h2 id="belief"><span class="no">02</span>把事实当算子，而不是真相</h2>
+
+  <p>第二个改法更反直觉：<strong>不把记录下来的东西叫"真相"，把它叫"信念"</strong>。每条记录都带上它是怎么来的、有多可信。于是同一个"事实"槽位里其实住着四种不同的东西：</p>
+
+  <dl class="th-basis">
+    <div>
+      <dt>OBSERVED</dt>
+      <dd>直接看到的：响应字节、状态码、文件内容、副作用。它也可能看错，但至少是自己看到的。</dd>
+    </div>
+    <div>
+      <dt>INFERRED</dt>
+      <dd>从观测推出来的判断，例如"这里的过滤是子串黑名单"。它依赖推理链，链断了一条，结论就要重来。</dd>
+    </div>
+    <div>
+      <dt>ASSUMED</dt>
+      <dd>还没有证据的假设。写下来的意义是：后面每一步都要考虑它，而不是默认它对。</dd>
+    </div>
+    <div>
+      <dt class="n">NEGATIVE</dt>
+      <dd>查过、被挡住、或者真的不存在 —— 连同"查的是哪条路径、被什么挡住"一起记。</dd>
+    </div>
+  </dl>
+
+  <p>这四条里，最容易被丢掉的是最后一条。人写东西的天性只愿意写成功，失败随手划掉。可在攻防里，被排除的路径和找到的路径同样值钱 —— 它缩小了下一步的搜索空间。把"查过、被挡"写清楚，后来的人（包括三天后的自己）就不用再撞一次同一堵墙。</p>
+
+  <p>还有一层：矛盾不要急着抹平。同一个参数，两次测试给出相反结果时，那个矛盾往往比两个结论都重要 —— 它说明中间有一层我们还没看见的东西。</p>
+
+  <h2 id="experiment"><span class="no">03</span>意图就是实验</h2>
+
+  <p>如果信念是状态，那么"下一步做什么"就是在这个状态上选一个动作。这里我们把动作分成两种，但只有一种值得写成条目：</p>
+
+  <p>第一种是<strong>为了确认的事</strong>：我已经知道大概怎么走，去把它跑完。第二种是<strong>为了区分的事</strong>：我不确定 A 还是 B，做一件事让它们露出区别。前一种叫执行，后一种才叫实验。真正决定一次测试快慢的，往往是后者做得够不够早。</p>
+
+  <p>所以一个实验应该长成这样：写清它想区分的假设、预期会看到什么、如果看到的不是这个该得出什么结论。缺了最后一条，实验做完也没有结论 —— 那只是"又打了一发"。</p>
+
+  <figure class="th-fig">
+    <svg viewBox="0 0 820 240" role="img" aria-label="观测、信念、实验构成闭环，实验产生的副作用更新观测">
+      <defs>
+        <marker id="a1" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#5ff3ff"/>
+        </marker>
+        <marker id="a2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+          <path d="M0,0 L9,4.5 L0,9 z" fill="#8b7cff"/>
+        </marker>
+      </defs>
+      <g font-family="ui-monospace, Consolas, monospace" font-size="12">
+        <rect x="52" y="86" width="150" height="62" rx="8" fill="#0b1220" stroke="#1a2740"/>
+        <text x="127" y="112" text-anchor="middle" fill="#e9f1ff">观测</text>
+        <text x="127" y="132" text-anchor="middle" fill="#8ba0c6" font-size="11">响应 · 报错 · 时序</text>
+
+        <rect x="336" y="86" width="156" height="62" rx="8" fill="#0b1220" stroke="#5ff3ff" stroke-opacity="0.5"/>
+        <text x="414" y="112" text-anchor="middle" fill="#5ff3ff">信念</text>
+        <text x="414" y="132" text-anchor="middle" fill="#8ba0c6" font-size="11">事实 · 假设 · 否证</text>
+
+        <rect x="626" y="86" width="150" height="62" rx="8" fill="#0b1220" stroke="#8b7cff" stroke-opacity="0.55"/>
+        <text x="701" y="112" text-anchor="middle" fill="#8b7cff">实验</text>
+        <text x="701" y="132" text-anchor="middle" fill="#8ba0c6" font-size="11">预期 · 判据</text>
+      </g>
+      <g fill="none" stroke-width="1.3">
+        <path d="M202 117 L330 117" stroke="#5ff3ff" marker-end="url(#a1)"/>
+        <path d="M492 117 L620 117" stroke="#8b7cff" marker-end="url(#a2)"/>
+        <path d="M701 148 C701 206, 200 206, 133 152" stroke="#5ff3ff" stroke-dasharray="5 4" marker-end="url(#a1)" opacity="0.75"/>
+      </g>
+      <text x="410" y="226" text-anchor="middle" fill="#8ba0c6" font-size="11.5" font-family="ui-monospace, Consolas, monospace">副作用 / 新的观测回流</text>
+    </svg>
+    <figcaption><b>FIG 01</b>　闭环的全部意义在于最后那条回边：实验如果没有产生可观测的变化，这条边就是断的，测试退化成盲打。</figcaption>
+  </figure>
+
+  <p>按这个标准重新看老经验，很多说法会变得更硬。比如"看副作用，不看回显"—— 它其实是说：回显这条信道可能被中间层改写，所以判据要挑那条掺不了假的边。再比如"一次扫描不报不等于没有"—— 那是把"没有观测到"错误地升级成了"不存在"。</p>
+
+  <h2 id="craft"><span class="no">04</span>四条手艺，四个字段</h2>
+
+  <p>理论如果只在文章里打转，就会变成口号。下面四条是从实战里反复验证、又反过来决定了记录方式的东西。每一条都可以落成一个字段。</p>
+
+  <div class="th-cards">
+    <div class="th-card">
+      <h4>源码的可得性，取决于留下了什么</h4>
+      <p>能不能拿到源码，和站点写得好不好关系不大，和运维当时顺手删了什么关系很大：版本库目录、备份包、构建产物、调试端点、错误页、注释、旧版本文件、代码托管平台的历史。这类东西没有规则可套，它是一次侦察动作。</p>
+      <p>所以它被单独记成"信息残留"：从哪拿到的、残留类型是什么、有多可信。而不是在报告里写一句"运气好"。</p>
+    </div>
+    <div class="th-card">
+      <h4>危险不在入口，在拼接点</h4>
+      <p>入口过滤不等于安全。同一个输入在接收、规范化、存储、拼接、解释器这几处会被不同规则理解；真正决定结果的是拼接点处的那个解释上下文。我们在 <a href="{{ '/blog/log-poison-lfi/' | relative_url }}">日志投毒</a>那篇里做的就是这件事：可控的那段字节先被写进日志，再被 <code>include</code> 当成代码 —— 危险的从来是"日志内容进入解释器"这一步。</p>
+      <p>所以记录要落到 <code>source → transform → sink</code> 这条线上，并把 sink 的解释器、编码、上下文写清楚。只写"存在注入"，等于没写。</p>
+    </div>
+    <div class="th-card">
+      <h4>双层解码：不是猜黑名单，是制造分歧</h4>
+      <p>过滤器解一次码，运行时又解一次。目标不是猜中黑名单，而是构造一串字节，让第一层解出来仍然干净，第二层解出来才是载荷。宽字节、URL 编码、字符集差异都是这个道理的不同实例。</p>
+      <p>所以证据要按层记录：每层期望的规范化、解码、字符集、截断规则。判定点不在"哪个字符被拦了"，在"两层对同一串字节的理解从哪里开始分叉"。</p>
+    </div>
+    <div class="th-card">
+      <h4>被断言的东西，不等于被验证的东西</h4>
+      <p>JWT 的 header 和 payload、cookie 属性、OAuth 参数、SAML 断言、路径里的"签名过的元数据"，都可能被下游当成事实使用。错误的本质是三方没对齐：谁断言、谁验证、验证了哪个字段。</p>
+      <p>我们刚写过的 <a href="{{ '/blog/thinkphp-cookie-pop/' | relative_url }}">ThinkPHP 那篇</a>就是活例子：身份被 base64 序列化后放在 cookie 里，服务端解出来当会话 —— 它确实和库里对了一次，所以"改用户名"没用；但解序列化这一步本身就是一个入口，问题不在验证逻辑，在"把客户端传来的串当成对象"这个动作。</p>
+    </div>
+  </div>
+
+  <h2 id="tools"><span class="no">05</span>与工具的分工</h2>
+
+  <p>这个模型有一个很实际的推论：工具的职责必须分开，而且不能互相替代。</p>
+
+  <p>有的工具负责回答<strong>"有没有"</strong> —— 它对一个面做穷尽枚举，把候选捞上来。它承担的是覆盖率，代价是不知道哪条真的能打穿。有的工具负责回答<strong>"能到哪一步"</strong> —— 它拿着一条线索往下钻，直到拿到副作用。它承担的是深度，代价是它只沿着给定的一条路走。还有一类工具负责<strong>提供原语</strong>，把密码学、编码、协议细节这些重复劳动从每次任务里省掉。</p>
+
+  <p>我们自己的几件东西就是按这个分工摆的：<a href="{{ '/tools/crackweb/' | relative_url }}">crackweb</a> 做前一类，<a href="{{ '/tools/cryptoexp/' | relative_url }}">cryptoexp</a> 提供原语，而"能到哪一步"那部分常常还是手工 —— 因为它的每一步都要读现场，没有通用解。</p>
+
+  <p>把两者混着用就会出现经典错误：拿"没报"当"没有"（把覆盖率工具当判定工具），或者拿一个只沿单条链的工具去测一个宽面（把钻头当尺子）。分工清楚，错误就少一半。</p>
+
+  <h2 id="limits"><span class="no">06</span>这套模型不保证什么</h2>
+
+  <p>写理论最容易犯的错，是把它写成万能。所以这一节必须写清楚边界：</p>
+
+  <div class="th-limits">
+    <div><p><strong>排序只能是启发式。</strong> "哪个实验信息量最大"没法精确计算，只能靠依赖关系、覆盖缺口、当前矛盾来估。它比按清单扫更接近决策，但仍然会选错。</p></div>
+    <div><p><strong>图是有损的。</strong> 有向无环图表达不了所有隐藏状态和循环反馈；对手也可以主动制造噪声，让我们的信念越更新越偏。</p></div>
+    <div><p><strong>自动化有天花板。</strong> 能交给机器的是"按前沿派发、按规则归档"；不能交的是"这个现象奇怪在哪"。后者一旦缺席，前面所有结构都会空转。</p></div>
+    <div><p><strong>授权是外部约束，不是模型的一部分。</strong> 模型只负责"怎么打得更准"，"能打到哪"由授权范围决定，两者不能混谈。</p></div>
+    <div><p><strong>证据的可复现性依赖环境。</strong> 同样的命令换个时间、换个网络可能给出不同结果。记录环境和通道，是为了可复核，不是假装它永恒。</p></div>
+  </div>
+
+  <p>所以我们不追求"跑完清单"，也不追求"自动化到不用人"。追求的是一个更朴素的东西：<strong>每一轮结束时，能说清现在相信什么、为什么信、下一步最值得做什么。</strong></p>
+
+  <h2><span class="no">—</span>这篇之后</h2>
+
+  <p>这是理论笔记的第一篇，定的是框架：观测是投影，事实是算子，意图是实验，证据按层记录。后面会一篇篇往外写 —— 每一篇都从一个具体的问题出发，比如"两个矛盾的结果该信哪个"、"什么时候该停止试探"、"怎样把一次实战的经验变成下次能用的判断"。</p>
+
+  <p>框架不保证答案，它只保证我们每次都在问对的问题。</p>
+
+  <nav class="th-nav">
+    <span>系列：理论笔记</span>
+    <a href="{{ '/theory/' | relative_url }}">← 返回目录</a>
+    <a href="{{ '/blog/' | relative_url }}">去看实践 →</a>
+  </nav>
+
+</article>
