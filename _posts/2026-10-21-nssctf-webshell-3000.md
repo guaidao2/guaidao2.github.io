@@ -192,4 +192,4 @@ GET /xxxx.php?p2=print("ASSERT_RCE_OK_".(7*7))
 
 ---
 
-后续把这套“怎么决定下一步”的想法整理进了理论笔记：[攻防是不完全信息博弈](/theory/incomplete-information/)。
+后续把这套“怎么决定下一步”的想法，变成了自己默认的动手顺序。
